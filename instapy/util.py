@@ -2595,6 +2595,12 @@ def get_additional_data(browser):
         if re.search("^window.__additionalDataLoaded", text):
             additional_data = json.loads(text[48:-2])
 
+    if additional_data is None:
+        for text in soup(text=re.compile(r"window._sharedData")):
+            match = re.search("{\"graphql\":.*?}}}}", text)
+            if match:
+                additional_data = json.loads(match[0])
+
     return additional_data
 
 
